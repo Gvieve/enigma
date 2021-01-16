@@ -9,4 +9,14 @@ class EnigmaTest < Minitest::Test
 
     assert_instance_of Enigma, enigma
   end
+
+  def test_it_can_generate_key
+    enigma = Enigma.new
+
+    assert_equal 0, enigma.key
+    enigma.generate_random_key
+    # enigma.stubs(:key).returns(57145)
+    #
+    assert_equal 57145, enigma.key
+  end
 end
