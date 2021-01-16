@@ -1,28 +1,63 @@
 require 'date'
 
 class Enigma
-  attr_reader :key,
-              :offset
+  attr_reader :message,
+              :key,
+              :date
 
-  def initialize
-    @key = 0
-    @offset = 0
+  def encrypt(message, key = nil, date = nil)
+    {:encryption => message,
+     :key => store_key(key),
+     :date => store_date(key, date)}
   end
 
-  def generate_random_key
+  def store_key(key)
+    if key.nil?
+      key = generate_key
+    elsif key.length == 5
+      key = key
+    elsif key.length == 6
+      key = generate_key
+    end
+  end
+
+  def store_date(key, date)
+    if date.nil? && key.nil?
+      date = generate_date
+    elsif date.nil? && key.length == 6
+      date = key
+    elsif date.nil? && key.length == 5
+      date = generate_date
+    elsif date.length == 6
+      date = date
+    end
+  end
+
+  def generate_key
     numbers = Array(0..9)
-    @key = numbers.sample(5).join.to_i
+    numbers.sample(5).join
   end
 
-  def numerical_date
-    Date.today.strftime("%d%m%y").to_i
+  def generate_date
+    date = Date.today
+    date.strftime("%d%m%y")
   end
 
-  def date_squared
-    (numerical_date * numerical_date).to_s
-  end
-
-  def generate_offset
-    @offset = date_squared[-4..-1].to_i
-  end
+  # date_squared(date)[-4..-1].to_i
+  #
+  # def numerical_date(date = Date.today)
+  #   # require "pry"; binding.pry
+  #   if date.class == String
+  #     date
+  #   else
+  #     date.strftime("%d%m%y")
+  #   end
+  # end
+  #
+  # def date_squared(date)
+  #   # require "pry"; binding.pry
+  #   ((numerical_date(date).to_i) * (numerical_date(date).to_i)).to_s
+  # end
+  #
+  #
 end
