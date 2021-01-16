@@ -23,17 +23,6 @@ class EnigmaTest < Minitest::Test
     assert_equal "040895", enigma.encrypt(message, key, date)[:date]
   end
 
-  def test_encrypt_accepts_no_key_has_date
-    enigma = Enigma.new
-    Enigma.any_instance.stubs(:generate_key).returns("57145")
-    message = "hello world"
-    date = "040895"
-
-    assert_equal "hello world", enigma.encrypt(message, date)[:encryption]
-    assert_equal "57145", enigma.encrypt(message, date)[:key]
-    assert_equal "040895", enigma.encrypt(message, date)[:date]
-  end
-
   def test_encrypt_accepts_has_key_no_date
     enigma = Enigma.new
     message = "hello world"
@@ -58,18 +47,13 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, enigma.encrypt(message)[:date]
   end
 
-  def test_store_key
-    enigma = Enigma.new
-
-    assert_equal "12345", enigma.store_key("12345")
-    key = nil
-    assert_equal 5, enigma.store_key(key).length
-  end
-
   def test_generate_key
     enigma = Enigma.new
 
     assert_equal 5, enigma.generate_key.length
     assert_equal String, enigma.generate_key.class
+
+    Enigma.any_instance.stubs(:generate_key).returns("57145")
+    assert_equal "57145", enigma.generate_key
   end
 end
