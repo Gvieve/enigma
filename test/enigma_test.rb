@@ -124,4 +124,12 @@ class EnigmaTest < Minitest::Test
 
     assert_equal expected, enigma.offset(date)
   end
+
+  def test_convert_message_to_numbers
+    enigma = Enigma.new
+    message = "Hello world"
+    converted = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
+
+    assert_equal converted, enigma.convert_message_to_numbers(message)
+  end
 end
