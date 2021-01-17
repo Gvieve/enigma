@@ -201,6 +201,9 @@ class EnigmaTest < Minitest::Test
     assert_equal "keder ohulw", enigma.encrypt(message, key, date)[:encryption]
     assert_equal "02715", enigma.encrypt(message, key, date)[:key]
     assert_equal "040895", enigma.encrypt(message, key, date)[:date]
+
+    message = "heLlo worlD!"
+    assert_equal "keder ohulw!", enigma.encrypt(message, key, date)[:encryption]
   end
 
   def test_encrypt_accepts_has_key_no_date
@@ -210,7 +213,7 @@ class EnigmaTest < Minitest::Test
     date = date = Date.today
     expected = date.strftime("%d%m%y")
 
-    assert_equal "hello world", enigma.encrypt(message, key)[:encryption]
+    assert_equal "nkfaufqdxry", enigma.encrypt(message, key)[:encryption]
     assert_equal "02715", enigma.encrypt(message, key)[:key]
     assert_equal expected, enigma.encrypt(message, key)[:date]
   end
@@ -222,7 +225,7 @@ class EnigmaTest < Minitest::Test
     date = Date.today
     expected = date.strftime("%d%m%y")
 
-    assert_equal "hello world", enigma.encrypt(message)[:encryption]
+    assert_equal "oacdvwngyhv", enigma.encrypt(message)[:encryption]
     assert_equal "57145", enigma.encrypt(message)[:key]
     assert_equal expected, enigma.encrypt(message)[:date]
   end

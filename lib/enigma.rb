@@ -118,7 +118,7 @@ class Enigma
   def encrypt(message, key = generate_key, date = generate_date)
     valid_input?(message, key, date)
 
-    {:encryption => message,
+    {:encryption => create_encrypted_message(message, key, date),
      :key => key,
      :date => date}
   end
