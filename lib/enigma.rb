@@ -5,6 +5,7 @@ class Enigma
 
   def initialize
     @encrypted_alphabets = []
+    @decrypted_alphabets = []
     @encrypted_message = []
   end
 
@@ -78,6 +79,16 @@ class Enigma
     @encrypted_alphabets
   end
 
+  def create_decrypted_alphabets(key, date)
+    shifts = create_shifts(key, date)
+
+    shifts.values.map do |shift|
+      @decrypted_alphabets << alphabet_array.rotate(-shift)
+    end
+
+    @decrypted_alphabets
+  end
+
   def convert_message_to_numbers(message)
     chars_message = message.downcase.chars
     chars_message.map do |letter|
@@ -119,6 +130,32 @@ class Enigma
     valid_input?(message, key, date)
 
     {:encryption => create_encrypted_message(message, key, date),
+     :key => key,
+     :date => date}
+  end
+
+  def create_decrypted_message(*values)
+    message, key, date = values
+    numerical_msg_groups = numerical_msg_groups(message)
+    create_decrypted_alphabets(key, date)
+
+    decrypted_message = numerical_msg_groups.flat_map do |group|
+      group.zip(@decrypted_alphabets).map do |(group, alphabet)|
+        if group.class == Integer
+          alphabet[group]
+        else
+          group
+        end
+      end
+    end
+
+    decrypted_message.join
+  end
+
+  def decrypt(message, key = generate_key, date = generate_date)
+    valid_input?(message, key, date)
+    # require "pry"; binding.pry
+    {:decryption => create_decrypted_message(message, key, date),
      :key => key,
      :date => date}
   end

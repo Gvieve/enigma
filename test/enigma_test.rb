@@ -232,14 +232,13 @@ class EnigmaTest < Minitest::Test
 
   def test_it_decrypts_with_key_and_date
     enigma = Enigma.new
-    message = "Hello world"
+    message = "keder ohulw"
     key = "02715"
     date = "040895"
-    encrypted_msg = "keder ohulw"
 
     assert_equal Hash, enigma.decrypt(message, key, date).class
-    assert_equal "hello world", enigma.decrypt(message)[:decryption]
-    assert_equal "027415", enigma.decrypt(message)[:key]
-    assert_equal "040895", enigma.decrypt(message)[:date]
+    assert_equal "hello world", enigma.decrypt(message, key, date)[:decryption]
+    assert_equal "02715", enigma.decrypt(message, key, date)[:key]
+    assert_equal "040895", enigma.decrypt(message, key, date)[:date]
   end
 end
