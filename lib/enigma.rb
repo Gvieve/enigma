@@ -31,14 +31,6 @@ class Enigma
     valid_date?(date)
   end
 
-  def encrypt(message, key = generate_key, date = generate_date)
-    valid_input?(message, key, date)
-
-    {:encryption => message,
-     :key => key,
-     :date => date}
-  end
-
   def generate_key
     (Array(0..9)).sample(5).join
   end
@@ -121,5 +113,13 @@ class Enigma
     end
 
     encrypted_message.join
+  end
+
+  def encrypt(message, key = generate_key, date = generate_date)
+    valid_input?(message, key, date)
+
+    {:encryption => create_encrypted_message(message, key, date),
+     :key => key,
+     :date => date}
   end
 end
