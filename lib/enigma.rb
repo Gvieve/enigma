@@ -1,6 +1,11 @@
 require 'date'
 
 class Enigma
+  attr_reader :encrypted_alphabets
+
+  def initialize
+    @encrypted_alphabets = []
+  end
 
   def valid_message?(message)
     message.class == String
@@ -41,10 +46,6 @@ class Enigma
     Date.today.strftime("%d%m%y")
   end
 
-  def offset(date)
-    ((date.to_i) * (date.to_i)).to_s[-4..-1]
-  end
-
   def alphabet_array
     Array("a".."z") << " "
   end
@@ -67,42 +68,31 @@ class Enigma
       D: key[3..4] }.transform_values(&:to_i)
   end
 
-  def create_offsets(offset)
+  def offset(date)
+    ((date.to_i) * (date.to_i)).to_s[-4..-1]
+  end
+
+  def create_offsets(date)
+    offset = offset(date)
     { A: offset[0],
       B: offset[1],
       C: offset[2],
       D: offset[3] }.transform_values(&:to_i)
   end
 
-  #create Hash for keys and hash for offsets
-  # keys = {A: key[0..1], B: key[1..2], etc}.transform_values(&:to_i)
-  # offsets = {A: offset[0], B: offset[1], etc}.transform_values(&:to_i)
+  def create_shifts(key, date)
+    create_keys(key).merge(create_offsets(date)) do |letter, key, offset|
+      key + offset
+    end
+  end
 
-  # Merge those two hashes together and add values to on another
-  # new_hash = keys.merge(offsets) {|letter, key, offset| key + offset}
+  def create_encrypted_alphabets(key, date)
+    shifts = create_shifts(key, date)
 
-  #create an array of arrays that has the cipher codes for A-D
-  # rotated_letters = alpha.rotate(new_hash[value])
-  # cipher_arrays << rotated_letters
+    shifts.values.each do |shift|
+      @encrypted_alphabets << alphabet_array.rotate(shift)
+    end
 
-  # create groups of letters_to_nums that will be zipped with cipher_arrays
-  # grouped_l_to_n = letters_to_nums.each_slice(4).map {|group| group}
-
-  # if that last element ends up having less than 4 elements move to own array
-  # leftovers = grouped_l_to_n.pop if grouped_l_to_n.last.size < 4
-
-  # iterate over grouped_l_to_n
-  # zip one group with ciper
-  # ciphered_msg = grouped_l_to_n.flat_map do |group|
-    # group.zip(cipher).map do |(group, cipher)|
-      # if group.class == Integer
-      #   cipher[group]
-      # else
-      #   group
-      # end
-    #end
-  #end
-
-  #zip leftovers with ciphers and add to end of ciphered_msg unless nil
-  # ciphered_msg.join
+    @encrypted_alphabets
+  end
 end

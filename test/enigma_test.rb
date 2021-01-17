@@ -189,15 +189,15 @@ class EnigmaTest < Minitest::Test
     key = "02715"
     date = "040895"
     enigma.create_shifts(key, date)
-    enigma.create_encrypted_alphabets
+    enigma.create_encrypted_alphabets(key, date)
     expected1 = "d"
     expected2 = "a"
     expected3 = "t"
     expected4 = "u"
 
-    assert_equal expected1, engima.encrypted_alphabets[0].first
-    assert_equal expected2, engima.encrypted_alphabets[1].first
-    assert_equal expected3, engima.encrypted_alphabets[2].first
-    assert_equal expected4, engima.encrypted_alphabets[3].first
+    assert_equal expected1, enigma.encrypted_alphabets[0].first
+    assert_equal expected2, enigma.encrypted_alphabets[1].first
+    assert_equal expected3, enigma.encrypted_alphabets[2].first
+    assert_equal expected4, enigma.encrypted_alphabets[3].first
   end
 end
