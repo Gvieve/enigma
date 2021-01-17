@@ -241,6 +241,9 @@ class EnigmaTest < Minitest::Test
     assert_equal "hello world", enigma.decrypt(message, key, date)[:decryption]
     assert_equal "02715", enigma.decrypt(message, key, date)[:key]
     assert_equal "040895", enigma.decrypt(message, key, date)[:date]
+
+    message = "keder ohulw!"
+    assert_equal "hello world!", enigma.decrypt(message, key, date)[:decryption]
   end
 
   def test_decrypt_accepts_has_key_no_date
