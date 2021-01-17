@@ -50,17 +50,6 @@ class Enigma
     Array("a".."z") << " "
   end
 
-  def convert_message_to_numbers(message)
-    chars_message = message.downcase.chars
-    chars_message.map do |letter|
-     if alphabet_array.include?(letter)
-       alphabet_array.index(letter)
-     else
-       letter
-     end
-    end
-  end
-
   def create_keys(key)
     { A: key[0..1],
       B: key[1..2],
@@ -89,10 +78,39 @@ class Enigma
   def create_encrypted_alphabets(key, date)
     shifts = create_shifts(key, date)
 
-    shifts.values.each do |shift|
+    shifts.values.map do |shift|
       @encrypted_alphabets << alphabet_array.rotate(shift)
     end
 
     @encrypted_alphabets
   end
+
+  def convert_message_to_numbers(message)
+    chars_message = message.downcase.chars
+    chars_message.map do |letter|
+     if alphabet_array.include?(letter)
+       alphabet_array.index(letter)
+     else
+       letter
+     end
+    end
+  end
+
+  def create_numerical_msg_groups(message)
+    numerical_msg = convert_message_to_numbers(message)
+
+    numerical_msg.each_slice(4).map do |group|
+      group
+    end
+  end
+
+  # Zip encrypted_alphabets and convert_message_to_numbers
+  # Nested iteration :
+  #   start with grouped_m_to_n
+  #     grouped_m_to_n zip encrypted_alphabets.map
+  #       if group.class == Integer
+  #          cipher[group]
+  #       else
+  #          group
+  #       end
 end

@@ -205,7 +205,6 @@ class EnigmaTest < Minitest::Test
     enigma = Enigma.new
     message = "Hello world"
     converted1 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3]]
-    # enigma.convert_message_to_numbers(message)
 
     assert_equal converted1, enigma.create_numerical_msg_groups(message)
   end
