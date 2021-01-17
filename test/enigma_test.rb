@@ -229,4 +229,17 @@ class EnigmaTest < Minitest::Test
     assert_equal "57145", enigma.encrypt(message)[:key]
     assert_equal expected, enigma.encrypt(message)[:date]
   end
+
+  def test_it_decrypts_with_key_and_date
+    enigma = Enigma.new
+    message = "Hello world"
+    key = "02715"
+    date = "040895"
+    encrypted_msg = "keder ohulw"
+
+    assert_equal Hash, enigma.decrypt(message, key, date).class
+    assert_equal "hello world", enigma.decrypt(message)[:decryption]
+    assert_equal "027415", enigma.decrypt(message)[:key]
+    assert_equal "040895", enigma.decrypt(message)[:date]
+  end
 end
