@@ -62,7 +62,6 @@ class EnigmaTest < Minitest::Test
 
     assert_equal 6, date.length
     assert_equal String, date.class
-    # assert_equal date, enigma.generate_date
   end
 
   def test_it_has_valid_inputs?
@@ -83,12 +82,10 @@ class EnigmaTest < Minitest::Test
     enigma = Enigma.new
     valid = "Test"
     invalid1 = 1234
-    invalid2 = nil
 
     # assert_equal true, enigma.valid_message?(valid)
     assert_equal true, enigma.valid_message?(valid)
     assert_equal false, enigma.valid_message?(invalid1)
-    assert_equal false, enigma.valid_message?(invalid2)
   end
 
   def test_is_valid_key?
@@ -96,7 +93,7 @@ class EnigmaTest < Minitest::Test
     valid = "12345"
     invalid1 = "123456"
     invalid2 = 12345
-    invalid3 = nil
+    invalid3 = "A12345"
 
     assert_equal true, enigma.valid_key?(valid)
     assert_equal false, enigma.valid_key?(invalid1)
@@ -109,11 +106,30 @@ class EnigmaTest < Minitest::Test
     valid = "123456"
     invalid1 = "12345"
     invalid2 = 123456
-    invalid3 = nil
+    invalid3 = "123A56"
 
     assert_equal true, enigma.valid_date?(valid)
     assert_equal false, enigma.valid_date?(invalid1)
     assert_equal false, enigma.valid_date?(invalid2)
     assert_equal false, enigma.valid_date?(invalid3)
+  end
+
+  def test_it_convert_date_to_offset
+    enigma = Enigma.new
+    message = "hello world"
+    key = "02715"
+    date = "040895"
+    date_squared = (date.to_i) * (date.to_i)
+    expected = date_squared.to_s[-4..-1]
+
+    assert_equal expected, enigma.offset(date)
+  end
+
+  def test_convert_message_to_numbers
+    enigma = Enigma.new
+    message = "Hello world"
+    converted = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
+
+    assert_equal converted, enigma.convert_message_to_numbers(message)
   end
 end

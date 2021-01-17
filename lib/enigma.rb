@@ -7,15 +7,15 @@ class Enigma
   end
 
   def valid_key?(key)
-    valid_message?(key) &&
-    key.length == 5 &&
-    key.scan(/\D/).empty?
+    (key.size == 5) &&
+    (valid_message?(key)) &&
+    (key.scan(/\D./).empty?)
   end
 
   def valid_date?(date)
-    valid_message?(date) &&
-    date.length == 6 &&
-    date.scan(/\D/).empty?
+    (date.size == 6) &&
+    (valid_message?(date)) &&
+    (date.scan(/\D./).empty?)
   end
 
   def valid_input?(*inputs)
@@ -41,21 +41,54 @@ class Enigma
     Date.today.strftime("%d%m%y")
   end
 
-  # date_squared(date)[-4..-1].to_i
-  #
-  # def numerical_date(date = Date.today)
-  #   # require "pry"; binding.pry
-  #   if date.class == String
-  #     date
-  #   else
-  #     date.strftime("%d%m%y")
-  #   end
-  # end
-  #
-  # def date_squared(date)
-  #   # require "pry"; binding.pry
-  #   ((numerical_date(date).to_i) * (numerical_date(date).to_i)).to_s
-  # end
-  #
-  #
+  def offset(date)
+    ((date.to_i) * (date.to_i)).to_s[-4..-1]
+  end
+
+  def alphabet_array
+    Array("a".."z") << " "
+  end
+
+  def convert_message_to_numbers(message)
+    chars_message = message.downcase.chars
+    chars_message.map do |letter|
+     if alphabet_array.include?(letter)
+       alphabet_array.index(letter)
+     else
+       letter
+     end
+    end
+  end
+
+  #create Hash for keys and hash for offsets
+  # keys = {A: key[0..1], B: key[1..2], etc}.transform_values(&:to_i)
+  # offsets = {A: offset[0], B: offset[1], etc}.transform_values(&:to_i)
+
+  # Merge those two hashes together and add values to on another
+  # new_hash = keys.merge(offsets) {|letter, key, offset| key + offset}
+
+  #create an array of arrays that has the cipher codes for A-D
+  # rotated_letters = alpha.rotate(new_hash[value])
+  # cipher_arrays << rotated_letters
+
+  # create groups of letters_to_nums that will be zipped with cipher_arrays
+  # grouped_l_to_n = letters_to_nums.each_slice(4).map {|group| group}
+
+  # if that last element ends up having less than 4 elements move to own array
+  # leftovers = grouped_l_to_n.pop if grouped_l_to_n.last.size < 4
+
+  # iterate over grouped_l_to_n
+  # zip one group with ciper
+  # ciphered_msg = grouped_l_to_n.flat_map do |group|
+    # group.zip(cipher).map do |(group, cipher)|
+      # if group.class == Integer
+      #   cipher[group]
+      # else
+      #   group
+      # end
+    #end
+  #end
+
+  #zip leftovers with ciphers and add to end of ciphered_msg unless nil
+  # ciphered_msg.join
 end
