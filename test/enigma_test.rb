@@ -128,9 +128,13 @@ class EnigmaTest < Minitest::Test
   def test_convert_message_to_numbers
     enigma = Enigma.new
     message = "Hello world"
-    converted = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
+    converted1 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
 
-    assert_equal converted, enigma.convert_message_to_numbers(message)
+    assert_equal converted1, enigma.convert_message_to_numbers(message)
+
+    message = "Hello world!"
+    converted2 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3, "!"]
+    assert_equal converted2, enigma.convert_message_to_numbers(message)
   end
 
   def test_keys_hash_when_key_date_provided
@@ -156,30 +160,44 @@ class EnigmaTest < Minitest::Test
     enigma = Enigma.new
     key = "02715"
     date = "040895"
-    offset = enigma.offset(date)
     expected = { A: 1, B: 0, C: 2, D: 5 }
-
-    assert_equal expected, enigma.create_offsets(offset)
+    Enigma.any_instance.stubs(:generate_date).returns("170121")
+    assert_equal expected, enigma.create_offsets(date)
   end
 
   def test_offset_hash_when_no_key_date_provided
     enigma = Enigma.new
     key = enigma.generate_key
+
     date = enigma.generate_date
-    offset = enigma.offset(date)
     expected = { A: 4, B: 6, C: 4, D: 1 }
 
-    assert_equal expected, enigma.create_offsets(offset)
+    assert_equal expected, enigma.create_offsets(date)
   end
 
   def test_create_shifts_hash
     enigma = Enigma.new
     key = "02715"
-    offset = "1025"
-    keys = enigma.create_keys(key)
-    offsets = enigma.create_offsets(offset)
+    date = "040895"
     expected = { A: 3, B: 27, C: 73, D: 20 }
 
-    assert_equal expected, enigma.create_shifts(keys, offsets)
+    assert_equal expected, enigma.create_shifts(key, date)
+  end
+
+  def test_create_encrypted_alphabets
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    enigma.create_shifts(key, date)
+    enigma.create_encrypted_alphabets
+    expected1 = "d"
+    expected2 = "a"
+    expected3 = "t"
+    expected4 = "u"
+
+    assert_equal expected1, engima.encrypted_alphabets[0].first
+    assert_equal expected2, engima.encrypted_alphabets[1].first
+    assert_equal expected3, engima.encrypted_alphabets[2].first
+    assert_equal expected4, engima.encrypted_alphabets[3].first
   end
 end
