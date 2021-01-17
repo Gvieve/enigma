@@ -206,6 +206,24 @@ class EnigmaTest < Minitest::Test
     message = "Hello world"
     converted1 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3]]
 
-    assert_equal converted1, enigma.create_numerical_msg_groups(message)
+    assert_equal converted1, enigma.numerical_msg_groups(message)
+
+    message = "Hello world!"
+    converted2 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3, "!"]]
+    assert_equal converted2, enigma.numerical_msg_groups(message)
+  end
+
+  def test_create_encrypted_message
+    enigma = Enigma.new
+    message = "Hello world"
+    key = "02715"
+    date = "040895"
+    converted1 = "keder ohulw"
+
+    assert_equal converted1, enigma.create_encrypted_message(message, key, date)
+
+    message = "Hello world!"
+    converted2 = "keder ohulw!"
+    assert_equal converted2, enigma.create_encrypted_message(message, key, date)
   end
 end
