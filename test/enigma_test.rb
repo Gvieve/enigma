@@ -113,4 +113,15 @@ class EnigmaTest < Minitest::Test
     assert_equal false, enigma.valid_date?(invalid2)
     assert_equal false, enigma.valid_date?(invalid3)
   end
+
+  def test_it_convert_date_to_offset
+    enigma = Enigma.new
+    message = "hello world"
+    key = "02715"
+    date = "040895"
+    date_squared = (date.to_i) * (date.to_i)
+    expected = date_squared.to_s[-4..-1]
+
+    assert_equal expected, enigma.offset(date)
+  end
 end
