@@ -125,18 +125,6 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, enigma.offset(date)
   end
 
-  def test_convert_message_to_numbers
-    enigma = Enigma.new
-    message = "Hello world"
-    converted1 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
-
-    assert_equal converted1, enigma.convert_message_to_numbers(message)
-
-    message = "Hello world!"
-    converted2 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3, "!"]
-    assert_equal converted2, enigma.convert_message_to_numbers(message)
-  end
-
   def test_keys_hash_when_key_date_provided
     enigma = Enigma.new
     key = "02715"
@@ -199,5 +187,43 @@ class EnigmaTest < Minitest::Test
     assert_equal expected2, enigma.encrypted_alphabets[1].first
     assert_equal expected3, enigma.encrypted_alphabets[2].first
     assert_equal expected4, enigma.encrypted_alphabets[3].first
+  end
+
+  def test_convert_message_to_numbers
+    enigma = Enigma.new
+    message = "Hello world"
+    converted1 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
+
+    assert_equal converted1, enigma.convert_message_to_numbers(message)
+
+    message = "Hello world!"
+    converted2 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3, "!"]
+    assert_equal converted2, enigma.convert_message_to_numbers(message)
+  end
+
+  def test_create_numerical_msg_groups
+    enigma = Enigma.new
+    message = "Hello world"
+    converted1 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3]]
+
+    assert_equal converted1, enigma.numerical_msg_groups(message)
+
+    message = "Hello world!"
+    converted2 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3, "!"]]
+    assert_equal converted2, enigma.numerical_msg_groups(message)
+  end
+
+  def test_create_encrypted_message
+    enigma = Enigma.new
+    message = "Hello world"
+    key = "02715"
+    date = "040895"
+    converted1 = "keder ohulw"
+
+    assert_equal converted1, enigma.create_encrypted_message(message, key, date)
+
+    message = "Hello world!"
+    converted2 = "keder ohulw!"
+    assert_equal converted2, enigma.create_encrypted_message(message, key, date)
   end
 end
