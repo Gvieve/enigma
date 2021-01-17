@@ -5,6 +5,7 @@ class Enigma
 
   def initialize
     @encrypted_alphabets = []
+    @encrypted_message = []
   end
 
   def valid_message?(message)
@@ -96,7 +97,7 @@ class Enigma
     end
   end
 
-  def create_numerical_msg_groups(message)
+  def numerical_msg_groups(message)
     numerical_msg = convert_message_to_numbers(message)
 
     numerical_msg.each_slice(4).map do |group|
@@ -104,13 +105,21 @@ class Enigma
     end
   end
 
-  # Zip encrypted_alphabets and convert_message_to_numbers
-  # Nested iteration :
-  #   start with grouped_m_to_n
-  #     grouped_m_to_n zip encrypted_alphabets.map
-  #       if group.class == Integer
-  #          cipher[group]
-  #       else
-  #          group
-  #       end
+  def create_encrypted_message(*values)
+    message, key, date = values
+    numerical_msg_groups = numerical_msg_groups(message)
+    create_encrypted_alphabets(key, date)
+
+    encrypted_message = numerical_msg_groups.flat_map do |group|
+      group.zip(@encrypted_alphabets).map do |(group, alphabet)|
+        if group.class == Integer
+          alphabet[group]
+        else
+          group
+        end
+      end
+    end
+
+    encrypted_message.join
+  end
 end
