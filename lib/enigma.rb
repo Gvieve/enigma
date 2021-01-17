@@ -2,7 +2,31 @@ require 'date'
 
 class Enigma
 
+  def valid_message?(message)
+    message.class == String
+  end
+
+  def valid_key?(key)
+    valid_message?(key) &&
+    key.length == 5 &&
+    key.scan(/\D/).empty?
+  end
+
+  def valid_date?(date)
+    valid_message?(date) &&
+    date.length == 6 &&
+    date.scan(/\D/).empty?
+  end
+
+  def valid_input?(*inputs)
+    message, key, date, = inputs
+    valid_message?(message) &&
+    valid_key?(key) &&
+    valid_date?(date)
+  end
+
   def encrypt(message, key = generate_key, date = generate_date)
+    valid_input?(message, key, date)
 
     {:encryption => message,
      :key => key,
