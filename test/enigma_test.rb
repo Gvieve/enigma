@@ -114,7 +114,7 @@ class EnigmaTest < Minitest::Test
     assert_equal false, enigma.valid_date?(invalid3)
   end
 
-  def test_it_convert_date_to_offset
+  def test_it_converts_date_to_offset
     enigma = Enigma.new
     message = "hello world"
     key = "02715"
@@ -128,8 +128,76 @@ class EnigmaTest < Minitest::Test
   def test_convert_message_to_numbers
     enigma = Enigma.new
     message = "Hello world"
-    converted = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
+    converted1 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
 
-    assert_equal converted, enigma.convert_message_to_numbers(message)
+    assert_equal converted1, enigma.convert_message_to_numbers(message)
+
+    message = "Hello world!"
+    converted2 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3, "!"]
+    assert_equal converted2, enigma.convert_message_to_numbers(message)
+  end
+
+  def test_keys_hash_when_key_date_provided
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    expected = { A: 2, B: 27, C: 71, D: 15 }
+
+    assert_equal expected, enigma.create_keys(key)
+  end
+
+  def test_keys_hash_when_no_key_date_provided
+    enigma = Enigma.new
+    Enigma.any_instance.stubs(:generate_key).returns("67890")
+    key = enigma.generate_key
+    date = enigma.generate_date
+    expected = { A: 67, B: 78, C: 89, D: 90 }
+
+    assert_equal expected, enigma.create_keys(key)
+  end
+
+  def test_offset_hash_when_key_date_provided
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    expected = { A: 1, B: 0, C: 2, D: 5 }
+    Enigma.any_instance.stubs(:generate_date).returns("170121")
+    assert_equal expected, enigma.create_offsets(date)
+  end
+
+  def test_offset_hash_when_no_key_date_provided
+    enigma = Enigma.new
+    key = enigma.generate_key
+
+    date = enigma.generate_date
+    expected = { A: 4, B: 6, C: 4, D: 1 }
+
+    assert_equal expected, enigma.create_offsets(date)
+  end
+
+  def test_create_shifts_hash
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    expected = { A: 3, B: 27, C: 73, D: 20 }
+
+    assert_equal expected, enigma.create_shifts(key, date)
+  end
+
+  def test_create_encrypted_alphabets
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    enigma.create_shifts(key, date)
+    enigma.create_encrypted_alphabets(key, date)
+    expected1 = "d"
+    expected2 = "a"
+    expected3 = "t"
+    expected4 = "u"
+
+    assert_equal expected1, enigma.encrypted_alphabets[0].first
+    assert_equal expected2, enigma.encrypted_alphabets[1].first
+    assert_equal expected3, enigma.encrypted_alphabets[2].first
+    assert_equal expected4, enigma.encrypted_alphabets[3].first
   end
 end
