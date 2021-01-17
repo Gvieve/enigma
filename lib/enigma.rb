@@ -7,15 +7,15 @@ class Enigma
   end
 
   def valid_key?(key)
-    valid_message?(key) &&
-    key.length == 5 &&
-    key.scan(/\D/).empty?
+    (key.size == 5) &&
+    (valid_message?(key)) &&
+    (key.scan(/\D./).empty?)
   end
 
   def valid_date?(date)
-    valid_message?(date) &&
-    date.length == 6 &&
-    date.scan(/\D/).empty?
+    (date.size == 6) &&
+    (valid_message?(date)) &&
+    (date.scan(/\D./).empty?)
   end
 
   def valid_input?(*inputs)
