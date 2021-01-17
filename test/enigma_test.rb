@@ -135,12 +135,39 @@ class EnigmaTest < Minitest::Test
 
   def test_keys_hash_when_key_date_provided
     enigma = Enigma.new
-    message = "hello world"
     key = "02715"
     date = "040895"
-    enigma.encrypt(message, key, date)
     expected = { A: 2, B: 27, C: 71, D: 15 }
 
     assert_equal expected, enigma.create_keys(key)
+  end
+
+  def test_keys_hash_when_no_key_date_provided
+    enigma = Enigma.new
+    Enigma.any_instance.stubs(:generate_key).returns("67890")
+    key = enigma.generate_key
+    date = enigma.generate_date
+    expected = { A: 67, B: 78, C: 89, D: 90 }
+
+    assert_equal expected, enigma.create_keys(key)
+  end
+
+  def test_offset_hash_when_key_date_provided
+    enigma = Enigma.new
+    key = "02715"
+    date = "040895"
+    expected = { A: 1, B: 0, C: 2, D: 5 }
+
+    assert_equal expected, enigma.create_offsets(date)
+  end
+
+  def test_offset_hash_when_no_key_date_provided
+    enigma = Enigma.new
+    # Enigma.any_instance.stubs(:generate_key).returns("67890")
+    key = enigma.generate_key
+    date = enigma.generate_date
+    expected = { A: 4, B: 6, C: 4, D: 1 }
+
+    assert_equal expected, enigma.create_offsets(date)
   end
 end
