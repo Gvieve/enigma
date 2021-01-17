@@ -114,7 +114,7 @@ class EnigmaTest < Minitest::Test
     assert_equal false, enigma.valid_date?(invalid3)
   end
 
-  def test_it_convert_date_to_offset
+  def test_it_converts_date_to_offset
     enigma = Enigma.new
     message = "hello world"
     key = "02715"
@@ -131,5 +131,16 @@ class EnigmaTest < Minitest::Test
     converted = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
 
     assert_equal converted, enigma.convert_message_to_numbers(message)
+  end
+
+  def test_keys_hash_when_key_date_provided
+    enigma = Enigma.new
+    message = "hello world"
+    key = "02715"
+    date = "040895"
+    enigma.encrypt(message, key, date)
+    expected = { A: 2, B: 27, C: 71, D: 15 }
+
+    assert_equal expected, enigma.create_keys(key)
   end
 end
