@@ -113,14 +113,14 @@ class EnigmaTest < Minitest::Test
     key = "02715"
     date = "040895"
     expected = { A: 1, B: 0, C: 2, D: 5 }
-    Enigma.any_instance.stubs(:generate_date).returns("170121")
+
     assert_equal expected, enigma.create_offsets(date)
   end
 
   def test_offset_hash_when_no_key_date_provided
     enigma = Enigma.new
     key = enigma.generate_key
-
+    Enigma.any_instance.stubs(:generate_date).returns("170121")
     date = enigma.generate_date
     expected = { A: 4, B: 6, C: 4, D: 1 }
 
@@ -210,12 +210,13 @@ class EnigmaTest < Minitest::Test
     enigma = Enigma.new
     message = "hello world"
     key = "02715"
-    date = date = Date.today
-    expected = date.strftime("%d%m%y")
+    Enigma.any_instance.stubs(:generate_date).returns("170121")
+    date = enigma.generate_date
+    # expected = date.strftime("%d%m%y")
 
     assert_equal "nkfaufqdxry", enigma.encrypt(message, key)[:encryption]
     assert_equal "02715", enigma.encrypt(message, key)[:key]
-    assert_equal expected, enigma.encrypt(message, key)[:date]
+    assert_equal "170121", enigma.encrypt(message, key)[:date]
   end
 
   def test_encrypt_accepts_no_key_no_date
@@ -240,5 +241,17 @@ class EnigmaTest < Minitest::Test
     assert_equal "hello world", enigma.decrypt(message, key, date)[:decryption]
     assert_equal "02715", enigma.decrypt(message, key, date)[:key]
     assert_equal "040895", enigma.decrypt(message, key, date)[:date]
+  end
+
+  def test_decrypt_accepts_has_key_no_date
+    enigma = Enigma.new
+    message = "nkfaufqdxry"
+    key = "02715"
+    Enigma.any_instance.stubs(:generate_date).returns("170121")
+    date = enigma.generate_date
+
+    assert_equal "hello world", enigma.decrypt(message, key)[:decryption]
+    assert_equal "02715", enigma.decrypt(message, key)[:key]
+    assert_equal "170121", enigma.decrypt(message, key)[:date]
   end
 end
