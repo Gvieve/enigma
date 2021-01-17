@@ -60,6 +60,13 @@ class Enigma
     end
   end
 
+  def create_keys(key)
+    { A: key[0..1],
+      B: key[1..2],
+      C: key[2..3],
+      D: key[3..4] }.transform_values(&:to_i)
+  end
+
   #create Hash for keys and hash for offsets
   # keys = {A: key[0..1], B: key[1..2], etc}.transform_values(&:to_i)
   # offsets = {A: offset[0], B: offset[1], etc}.transform_values(&:to_i)
