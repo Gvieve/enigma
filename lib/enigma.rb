@@ -55,7 +55,7 @@ class Enigma
       {encryption:  create_encrypted_message(message, key, date),
        key:         key,
        date:        date}
-   end
+    end
   end
 
   def create_decrypted_message(message, key, date)
