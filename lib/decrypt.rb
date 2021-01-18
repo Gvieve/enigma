@@ -1,10 +1,12 @@
-require "./lib/enigma.rb"
+require './lib/enigma.rb'
+require 'date'
 
 encrypted_input, decrypted_output, key_input, date_input = ARGV
 
 encrypted_message = File.open(encrypted_input, "r").readlines.join.chomp
-
 enigma = Enigma.new
+
+date_input = Date.today.strftime("%d%m%y") if ARGV[3].nil?
 
 message_output, key_output, date_output = enigma.decrypt(encrypted_message, key_input, date_input).values
 

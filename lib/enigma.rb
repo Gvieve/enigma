@@ -6,61 +6,44 @@ class Enigma
   include Validateable
   include Generateable
 
-  def initialize
-    @encrypted_alphabets = []
-    @decrypted_alphabets = []
-  end
-
   def create_encrypted_alphabets(key, date)
     shifts = generate_shifts(key, date)
     shifts.values.map do |shift|
-      @encrypted_alphabets << generate_alphabet_array.rotate(shift)
+      generate_alphabet_array.rotate(shift)
     end
-
-    @encrypted_alphabets
   end
 
   def create_decrypted_alphabets(key, date)
     shifts = generate_shifts(key, date)
-
     shifts.values.map do |shift|
-      @decrypted_alphabets << generate_alphabet_array.rotate(-shift)
+      generate_alphabet_array.rotate(-shift)
     end
-
-    @decrypted_alphabets
   end
 
-  def convert_message_to_numbers(message)
+  def convert_message_to_index(message)
     chars_message = message.downcase.chars
+    alphabet = generate_alphabet_array
     chars_message.map do |letter|
-     if generate_alphabet_array.include?(letter)
-       generate_alphabet_array.index(letter)
+     if alphabet.include?(letter)
+       alphabet.index(letter)
      else
        letter
      end
     end
   end
 
-  def numerical_msg_groups(message)
-    numerical_msg = convert_message_to_numbers(message)
-
-    numerical_msg.each_slice(4).map do |group|
+  def index_msg_groups(message)
+    index_msg = convert_message_to_index(message)
+    index_msg.each_slice(4).map do |group|
       group
     end
   end
 
-  def create_encrypted_message(*values)
-    message, key, date = values
-    numerical_msg_groups = numerical_msg_groups(message)
-    create_encrypted_alphabets(key, date)
-
-    encrypted_message = numerical_msg_groups.flat_map do |group|
-      group.zip(@encrypted_alphabets).map do |number, alphabet|
-        if number.class == Integer
-          alphabet[number]
-        else
-          number
-        end
+  def create_encrypted_message(message, key, date)
+    index_msg_groups = index_msg_groups(message)
+    encrypted_message = index_msg_groups.flat_map do |group|
+      group.zip(create_encrypted_alphabets(key, date)).map do |number, alphabet|
+        number.class == Integer ? alphabet[number] : number
       end
     end
 
@@ -75,18 +58,11 @@ class Enigma
      :date => date}
   end
 
-  def create_decrypted_message(*values)
-    message, key, date = values
-    numerical_msg_groups = numerical_msg_groups(message)
-    create_decrypted_alphabets(key, date)
-
-    decrypted_message = numerical_msg_groups.flat_map do |group|
-      group.zip(@decrypted_alphabets).map do |number, alphabet|
-        if number.class == Integer
-          alphabet[number]
-        else
-          number
-        end
+  def create_decrypted_message(message, key, date)
+    index_msg_groups = index_msg_groups(message)
+    decrypted_message = index_msg_groups.flat_map do |group|
+      group.zip(create_decrypted_alphabets(key, date)).map do |index, alphabet|
+        index.class == Integer ? alphabet[index] : index
       end
     end
 
