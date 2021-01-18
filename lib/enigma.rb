@@ -6,27 +6,24 @@ class Enigma
   include Validateable
   include Generateable
 
-  def initialize
-    @encrypted_alphabets = []
-    @decrypted_alphabets = []
-  end
-
   def create_encrypted_alphabets(key, date)
     shifts = generate_shifts(key, date)
+    encrypted_alphabets = []
     shifts.values.map do |shift|
-      @encrypted_alphabets << generate_alphabet_array.rotate(shift)
+      encrypted_alphabets << generate_alphabet_array.rotate(shift)
     end
 
-    @encrypted_alphabets
+    encrypted_alphabets
   end
 
   def create_decrypted_alphabets(key, date)
     shifts = generate_shifts(key, date)
+    decrypted_alphabets = []
     shifts.values.map do |shift|
-      @decrypted_alphabets << generate_alphabet_array.rotate(-shift)
+      decrypted_alphabets << generate_alphabet_array.rotate(-shift)
     end
 
-    @decrypted_alphabets
+    decrypted_alphabets
   end
 
   def convert_message_to_index(message)
@@ -50,10 +47,9 @@ class Enigma
 
   def create_encrypted_message(message, key, date)
     index_msg_groups = index_msg_groups(message)
-    create_encrypted_alphabets(key, date)
-
+    encrypted_alphabets = create_encrypted_alphabets(key, date)
     encrypted_message = index_msg_groups.flat_map do |group|
-      group.zip(@encrypted_alphabets).map do |number, alphabet|
+      group.zip(encrypted_alphabets).map do |number, alphabet|
         number.class == Integer ? alphabet[number] : number
       end
     end
@@ -71,10 +67,9 @@ class Enigma
 
   def create_decrypted_message(message, key, date)
     index_msg_groups = index_msg_groups(message)
-    create_decrypted_alphabets(key, date)
-
+    decrypted_alphabets = create_decrypted_alphabets(key, date)
     decrypted_message = index_msg_groups.flat_map do |group|
-      group.zip(@decrypted_alphabets).map do |index, alphabet|
+      group.zip(decrypted_alphabets).map do |index, alphabet|
         index.class == Integer ? alphabet[index] : index
       end
     end
