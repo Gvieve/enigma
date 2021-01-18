@@ -150,28 +150,28 @@ class EnigmaTest < Minitest::Test
     assert_equal expected4, enigma.create_encrypted_alphabets(key, date)[3].first
   end
 
-  def test_convert_message_to_numbers
+  def test_convert_message_to_index
     enigma = Enigma.new
     message = "Hello world"
     converted1 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3]
 
-    assert_equal converted1, enigma.convert_message_to_numbers(message)
+    assert_equal converted1, enigma.convert_message_to_index(message)
 
     message = "Hello world!"
     converted2 = [7, 4, 11, 11, 14, 26, 22, 14, 17, 11, 3, "!"]
-    assert_equal converted2, enigma.convert_message_to_numbers(message)
+    assert_equal converted2, enigma.convert_message_to_index(message)
   end
 
-  def test_create_numerical_msg_groups
+  def test_create_index_msg_groups
     enigma = Enigma.new
     message = "Hello world"
     converted1 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3]]
 
-    assert_equal converted1, enigma.numerical_msg_groups(message)
+    assert_equal converted1, enigma.index_msg_groups(message)
 
     message = "Hello world!"
     converted2 = [[7, 4, 11, 11], [14, 26, 22, 14], [17, 11, 3, "!"]]
-    assert_equal converted2, enigma.numerical_msg_groups(message)
+    assert_equal converted2, enigma.index_msg_groups(message)
   end
 
   def test_create_encrypted_message
