@@ -139,15 +139,11 @@ class EnigmaTest < Minitest::Test
     enigma = Enigma.new
     key = "02715"
     date = "040895"
-    expected1 = "d"
-    expected2 = "a"
-    expected3 = "t"
-    expected4 = "u"
+    letter1 = "d"
+    letter2 = "u"
 
-    assert_equal expected1, enigma.create_encrypted_alphabets(key, date)[0].first
-    assert_equal expected2, enigma.create_encrypted_alphabets(key, date)[1].first
-    assert_equal expected3, enigma.create_encrypted_alphabets(key, date)[2].first
-    assert_equal expected4, enigma.create_encrypted_alphabets(key, date)[3].first
+    assert_equal letter1, enigma.create_encrypted_alphabets(key, date).first.first
+    assert_equal letter2, enigma.create_encrypted_alphabets(key, date).last.first
   end
 
   def test_convert_message_to_index
