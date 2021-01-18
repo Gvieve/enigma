@@ -51,11 +51,11 @@ class Enigma
   end
 
   def encrypt(message, key = generate_key, date = generate_date)
-    valid_input?(message, key, date)
-
-    {:encryption => create_encrypted_message(message, key, date),
-     :key => key,
-     :date => date}
+    if valid_input?(message, key, date)
+      {encryption:  create_encrypted_message(message, key, date),
+       key:         key,
+       date:        date}
+   end
   end
 
   def create_decrypted_message(message, key, date)
@@ -70,10 +70,10 @@ class Enigma
   end
 
   def decrypt(message, key, date = generate_date)
-    valid_input?(message, key, date)
-
-    {:decryption => create_decrypted_message(message, key, date),
-     :key => key,
-     :date => date}
+    if valid_input?(message, key, date)
+      {decryption:  create_decrypted_message(message, key, date),
+       key:         key,
+       date:        date}
+    end
   end
 end
