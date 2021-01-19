@@ -15,24 +15,11 @@ module Generateable
     ((date.to_i) * (date.to_i)).to_s[-4..-1]
   end
 
-  def generate_keys(key)
-    { A: key[0..1],
-      B: key[1..2],
-      C: key[2..3],
-      D: key[3..4] }.transform_values(&:to_i)
-  end
-
-  def generate_offsets(date)
-    offset = generate_offset(date)
-    { A: offset[0],
-      B: offset[1],
-      C: offset[2],
-      D: offset[3] }.transform_values(&:to_i)
-  end
-
   def generate_shifts(key, date)
-    generate_keys(key).merge(generate_offsets(date)) do |letter, key, offset|
-      key + offset
-    end
+    offset = generate_offset(date)
+    { A: key[0..1].to_i + offset[0].to_i,
+      B: key[1..2].to_i + offset[1].to_i,
+      C: key[2..3].to_i + offset[2].to_i,
+      D: key[3..4].to_i + offset[3].to_i }
   end
 end

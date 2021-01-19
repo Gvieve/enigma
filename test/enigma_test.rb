@@ -79,51 +79,11 @@ class EnigmaTest < Minitest::Test
 
   def test_it_converts_date_to_offset
     enigma = Enigma.new
-    message = "hello world"
-    key = "02715"
     date = "040895"
     date_squared = (date.to_i) * (date.to_i)
     expected = date_squared.to_s[-4..-1]
 
     assert_equal expected, enigma.generate_offset(date)
-  end
-
-  def test_keys_hash_when_key_date_provided
-    enigma = Enigma.new
-    key = "02715"
-    date = "040895"
-    expected = { A: 2, B: 27, C: 71, D: 15 }
-
-    assert_equal expected, enigma.generate_keys(key)
-  end
-
-  def test_keys_hash_when_no_key_date_provided
-    enigma = Enigma.new
-    Enigma.any_instance.stubs(:generate_key).returns("67890")
-    key = enigma.generate_key
-    date = enigma.generate_date
-    expected = { A: 67, B: 78, C: 89, D: 90 }
-
-    assert_equal expected, enigma.generate_keys(key)
-  end
-
-  def test_offset_hash_when_key_date_provided
-    enigma = Enigma.new
-    key = "02715"
-    date = "040895"
-    expected = { A: 1, B: 0, C: 2, D: 5 }
-
-    assert_equal expected, enigma.generate_offsets(date)
-  end
-
-  def test_offset_hash_when_no_key_date_provided
-    enigma = Enigma.new
-    key = enigma.generate_key
-    Enigma.any_instance.stubs(:generate_date).returns("170121")
-    date = enigma.generate_date
-    expected = { A: 4, B: 6, C: 4, D: 1 }
-
-    assert_equal expected, enigma.generate_offsets(date)
   end
 
   def test_generate_shifts_hash
@@ -204,8 +164,6 @@ class EnigmaTest < Minitest::Test
     message = "hello world"
     key = "02715"
     Enigma.any_instance.stubs(:generate_date).returns("170121")
-    date = enigma.generate_date
-    # expected = date.strftime("%d%m%y")
 
     assert_equal "nkfaufqdxry", enigma.encrypt(message, key)[:encryption]
     assert_equal "02715", enigma.encrypt(message, key)[:key]
@@ -244,7 +202,6 @@ class EnigmaTest < Minitest::Test
     message = "nkfaufqdxry"
     key = "02715"
     Enigma.any_instance.stubs(:generate_date).returns("170121")
-    date = enigma.generate_date
 
     assert_equal "hello world", enigma.decrypt(message, key)[:decryption]
     assert_equal "02715", enigma.decrypt(message, key)[:key]
