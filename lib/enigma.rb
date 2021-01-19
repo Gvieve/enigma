@@ -23,11 +23,11 @@ class Enigma
   def convert_message_to_index(message)
     chars_message = message.downcase.chars
     alphabet = generate_alphabet_array
-    chars_message.map do |letter|
-     if alphabet.include?(letter)
-       alphabet.index(letter)
+    chars_message.map do |letter_or_character|
+     if alphabet.include?(letter_or_character)
+       alphabet.index(letter_or_character)
      else
-       letter
+       letter_or_character
      end
     end
   end
@@ -42,8 +42,8 @@ class Enigma
   def create_encrypted_message(message, key, date)
     index_msg_groups = index_msg_groups(message)
     encrypted_message = index_msg_groups.flat_map do |group|
-      group.zip(create_encrypted_alphabets(key, date)).map do |number, alphabet|
-        number.class == Integer ? alphabet[number] : number
+      group.zip(create_encrypted_alphabets(key, date)).map do |index_or_character, alphabet|
+        index_or_character.class == Integer ? alphabet[index_or_character] : index_or_character
       end
     end
 
@@ -61,8 +61,8 @@ class Enigma
   def create_decrypted_message(message, key, date)
     index_msg_groups = index_msg_groups(message)
     decrypted_message = index_msg_groups.flat_map do |group|
-      group.zip(create_decrypted_alphabets(key, date)).map do |index, alphabet|
-        index.class == Integer ? alphabet[index] : index
+      group.zip(create_decrypted_alphabets(key, date)).map do |index_or_character, alphabet|
+        index_or_character.class == Integer ? alphabet[index_or_character] : index_or_character
       end
     end
 
